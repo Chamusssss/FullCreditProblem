@@ -1,15 +1,15 @@
 clear all;
 N = 2500; % Number of creditors
 NZ = 5200; % Number of samples from MC
-nE = 2; % Number of epsilion samples to take PER z sample
-S = 5; % Dimension of Z
-NRuns = 1; % Number of times to recompute integral before averaging results
+nE = 35; % Number of epsilion samples to take PER z sample
+S = 10; % Dimension of Z
+NRuns = 5; % Number of times to recompute integral before averaging results
   
 a = zeros(1,NRuns);
 v = zeros(1,NRuns);
 
-totalT = cputime;
 for r=1:NRuns
+    totalT = cputime;
     disp(strcat('RUN NUMBER',num2str(r)))
     %Initialize data
     [H, BETA, tail, EAD, CN, LGC, CMM, C] = ProblemParams(N, S, true);
@@ -76,10 +76,11 @@ for r=1:NRuns
     clear LossMat;
     clear pncz;
     clear weights;
+    disp(strcat('TOTAL RUNTIME...',num2str(cputime - totalT),'s'))
 end
-disp(strcat('TOTAL RUNTIME...',num2str(cputime - totalT),'s'))
+
 %[vpa(a); vpa(v)]'
 vpa(a)
 vpa(mean(a))
-vpa(mean(v))
+%vpa(mean(v))
 

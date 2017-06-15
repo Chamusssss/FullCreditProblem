@@ -2,8 +2,8 @@ clear all;
 N = 2500; % Number of creditors
 NZ = 5000; % Number of samples from MoG (pi*) 
 nE = 2; % Number of epsilion samples to take PER z sample
-NPi = 4600; % Number of samples from MCMC of pi
-NRuns = 1; % Number of times to recompute integral before averaging results
+NPi = 600; % Number of samples from MCMC of pi
+NRuns = 5; % Number of times to recompute integral before averaging results
 S = 20; % Dimension of Z
 k = 2; % Number of Gaussians in MoG
 burninRatio = 0.1;
@@ -13,6 +13,7 @@ a = zeros(1,NRuns);
 v = zeros(1,NRuns);
 
 for r=1:NRuns
+    totalT = cputime;
     disp(strcat('RUN NUMBER',num2str(r)))
     %Initialize data
     [H, BETA, tail, EAD, CN, LGC, CMM] = ProblemParams(N, S, true);
@@ -22,12 +23,6 @@ for r=1:NRuns
     B = floor(NPi * burninRatio);
     f = @(z) DensityAtZ(z,H,BETA,tail,EAD,LGC);
     sampleZ = slicesample(rand(1,S), NPi, 'pdf', f, 'thin', 3, 'burnin', B);
-    %g = @(z) LogDensityAtZ(z,H,BETA,tail,EAD,LGC);
-    %smp = hmcSampler(g,rand(1,S),'UseNumericalGradient',true);
-    %[MAPpars,fitInfo] = estimateMAP(smp,'VerbosityLevel',0);
-    %[smp,tuneinfo] = tuneSampler(smp,'Start',MAPpars);
-    %sampleZ = drawSamples(smp,'Start',MAPpars + randn(size(MAPpars)),'Burnin',B,'NumSamples',NPi);
-    %sampleZ = rand(NZ,S); %FOR TESTING PURPOSES
     disp(strcat('FINISH MCMC SAMPLING FROM PI...',num2str(cputime - t),'s'))
 
     disp('BEGIN TRAINING MOG')
@@ -43,11 +38,11 @@ for r=1:NRuns
     sampleZ = SampleMoG(MoGWeights,MoGMu,MoGSigma,NZ)';
     %sampleZ = mixGaussRnd(S,k,NZ);
     MoGDen = arrayfun(@(i) EvalMoG(MoGWeights,MoGMu,MoGSigma,sampleZ(:,i)),1:NZ);
-    ZDen = arrayfun(@(i) f(sampleZ(:,i)'),1:NZ);
-    MoGIntegrand = ZDen./MoGDen;
-    disp('MoG Estimate')
-    vpa(mean(MoGIntegrand))
-    vpa(var(MoGIntegrand))
+    %ZDen = arrayfun(@(i) f(sampleZ(:,i)'),1:NZ);
+    %MoGIntegrand = ZDen./MoGDen;
+    %disp('MoG Estimate')
+    %vpa(mean(MoGIntegrand))
+    %vpa(var(MoGIntegrand))
     clear MoGIntegrand;
     clear MoGMu;
     clear MoGSigma;
@@ -99,7 +94,6 @@ for r=1:NRuns
     l = double(Loss > tail).*LR;
     a(r) = vpa(mean(l));
     v(r) = vpa(var(l));
-    clear C;
     clear CMM;
     clear CN;
     clear denom;
@@ -112,17 +106,14 @@ for r=1:NRuns
     clear Loss;
     clear LossMat;
     clear LR;
-    clear LRE;
     clear LRZ;
     clear MoGDen;
-    clear psi;
-    clear pTheta;
     clear sampleZ;
-    clear theta;
     clear weights;
     clear ZDen;
     clear pncz;
     disp(strcat('FINISH COMPUTING LOSS...',num2str(cputime - t),'s'))%clear all;
+    disp(strcat('TOTAL RUNTIME...',num2str(cputime - totalT),'s'))
 end
 %[vpa(a); vpa(v)]'
 vpa(a)

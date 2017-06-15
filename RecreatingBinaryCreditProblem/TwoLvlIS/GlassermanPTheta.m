@@ -14,6 +14,8 @@ function [pTheta,thetaVec] = GlassermanPTheta(pncz,weights,tail)
 %             cvx_end
             energy = @(theta) psi(theta,pnc) - tail*theta;
             options = optimset('LargeScale','off', 'display', 'off');
+            intialGuess = 0;
+            if(i > 1); intialGuess = thetaVec(i-1); end
             [theta, fval, exitflag, output] = fminunc(energy, 0, options);
             twist = pnc.*exp(weights.*theta);
             s = sum(twist,2);

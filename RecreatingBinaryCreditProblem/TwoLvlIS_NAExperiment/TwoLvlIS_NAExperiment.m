@@ -74,7 +74,7 @@ for r=1:NRuns
     disp('BEGIN COMPUTING THETA')
     t = cputime;
     weights = EAD.*LGC;
-    [pTheta,theta] = GlassermanPTheta(pncz,weights,tail);
+    [pTheta,theta] = GlassermanPTheta(pncz,LGC,EAD,tail);
     disp(strcat('FINISH COMPUTING THETA...',num2str(cputime - t),'s'))
 
     disp('BEGIN SAMPLING PNCZ')
@@ -125,7 +125,7 @@ for r=1:NRuns
     clear psi;
     clear pTheta;
     clear sampleZ;
-    clear theta;
+    %clear theta;
     clear weights;
     clear ZDen;
     clear pncz;
