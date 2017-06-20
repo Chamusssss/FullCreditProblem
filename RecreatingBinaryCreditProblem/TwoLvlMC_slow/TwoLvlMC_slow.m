@@ -1,9 +1,9 @@
 clear all;
 N = 2500; % Number of creditors
-NZ = 300; % Number of samples from MC
-nE = 200; % Number of epsilion samples to take PER z sample
+NZ = 1000; % Number of samples from MC
+nE = 1000; % Number of epsilion samples to take PER z sample
 S = 10; % Dimension of Z
-NRuns = 5; % Number of times to recompute integral before averaging results
+NRuns = 1; % Number of times to recompute integral before averaging results
   
 a = zeros(1,NRuns);
 v = zeros(1,NRuns);
@@ -32,7 +32,11 @@ for r=1:NRuns
         CHZ = repmat(CH,1,1,1);
         BZ = reshape(BZ,N,1,1);
         CBZ = repelem(BZ,1,C);
-        PINV = (CHZ - CBZ) ./ denom;
+        A = (CHZ - CBZ);
+        PINV = zeros(N,C);
+        for j=1:C
+            PINV(:,j) = A(:,j) ./ denom;
+        end
         PHI = normcdf(PINV);
         PHI = [zeros(N,1,1) PHI];
         pncz = diff(PHI,1,2); %column wise diff
