@@ -1,13 +1,13 @@
 clear all;
 N = 2500; % Number of creditors
-NZ = 500; % Number of samples from MC
+NZ = 300; % Number of samples from MC
 nE = 300; % Number of epsilion samples to take PER z sample
 S = 10; % Dimension of Z
-NRuns = 10; % Number of times to recompute integral before averaging results
+NRuns = 1; % Number of times to recompute integral before averaging results
   
 a = zeros(1,NRuns);
 v = zeros(1,NRuns);
-  
+   
 az = zeros(1,NZ);
 vz = zeros(1,NZ);
 
@@ -59,7 +59,7 @@ for r=1:NRuns
         cdf = repelem(cdf,1,1,nE);
         u = rand([N,1,nE*1]);
         isOne = (cdf >= u) == 1;
-        ind = isOne & (cumsum(isOne,2) == 1);
+        ind = (cumsum(isOne,2) == 1);
         %clear isOne;
         %clear u;
         %clear cdf;
@@ -73,12 +73,13 @@ for r=1:NRuns
         Loss = sum(sum(LossMat,2),1);
         Loss = reshape(Loss,1,nE*1);
         l = double(Loss > tail);
-        az(zIndex) = vpa(mean(l));
+        az(zIndex) = mean(vpa(l));
+        vz(zIndex) = var(vpa(l));
         if (mod(zIndex,10000) == 0)
-           vpa(mean(az))
+           mean(vpa(az))
         end
         %zIndex = zIndex + 1;
-        %vz(zIndex) = vpa(var(l));
+
         %disp(strcat('FINISH COMPUTING LOSS...',num2str(cputime - t),'s'))
         %clear C;
         %clear CMM;
@@ -93,13 +94,17 @@ for r=1:NRuns
         %clear weights;
         
     end
-    a(r) = vpa(mean(az));
-    %v(r) = vpa(var(vz));
+    a(r) = mean(vpa(az));
+    v(r) = mean(vpa(vz));
     disp(strcat('TOTAL RUNTIME...',num2str(cputime - totalT),'s'))
 end
 
 %[vpa(a); vpa(v)]'
+disp('mean')
 vpa(a)
 vpa(mean(a))
-%vpa(mean(v))
+% disp('var')
+% vpa(v)
+% vpa(mean(v))
+
 

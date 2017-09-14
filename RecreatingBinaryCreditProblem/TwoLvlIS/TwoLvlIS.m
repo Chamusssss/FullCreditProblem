@@ -1,11 +1,11 @@
 clear all;
 N = 2500; % Number of creditors
-NZ = 5000; % Number of samples from MoG (pi*) 
-nE = 2; % Number of epsilion samples to take PER z sample
+NZ = 300; % Number of samples from MoG (pi*) 
+nE = 300; % Number of epsilion samples to take PER z sample
 NPi = 600; % Number of samples from MCMC of pi
 NRuns = 1; % Number of times to recompute integral before averaging results
-S = 10; % Dimension of Z
-k = 2; % Number of Gaussians in MoG
+S = 5; % Dimension of Z
+k = 1; % Number of Gaussians in MoG
 burninRatio = 0.2;
 
 a = zeros(1,NRuns);
@@ -83,7 +83,7 @@ for r=1:NRuns
     cdf = repelem(cdf,1,1,nE);
     u = rand([N,1,nE*NZ]);
     isOne = (cdf >= u) == 1;
-    ind = isOne & (cumsum(isOne,2) == 1);
+    ind = (cumsum(isOne,2) == 1);
     clear isOne;
     clear u;
     clear cdf;
@@ -134,7 +134,10 @@ for r=1:NRuns
 end
 
 %[vpa(a); vpa(v)]'
+disp('mean')
 vpa(a)
 vpa(mean(a))
-%vpa(mean(v))
+disp('var')
+vpa(v)
+vpa(mean(v))
 

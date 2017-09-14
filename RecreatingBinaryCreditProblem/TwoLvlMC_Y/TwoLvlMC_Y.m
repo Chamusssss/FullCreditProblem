@@ -1,7 +1,7 @@
 clear all;
 N = 2500; % Number of creditors
-NZ = 5000; % Number of samples from MC
-nE = 30; % Number of epsilion samples to take PER z sample
+NZ = 10000; % Number of samples from MC
+nE = 2; % Number of epsilion samples to take PER z sample
 S = 10; % Dimension of Z
 NRuns = 5; % Number of times to recompute integral before averaging results
   
@@ -51,6 +51,7 @@ for r=1:NRuns
     l = double(Loss > tail);
     a(r) = vpa(mean(l));
     v(r) = vpa(var(l));
+    disp(strcat('TOTAL RUNTIME...',num2str(cputime - totalT),'s'))
 end
 
 %[vpa(a); vpa(v)]'
