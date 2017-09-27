@@ -8,18 +8,18 @@ function [prob] = DensityAtZ(z,H,BETA,tail,EAD,LGC)
     prob = max(prob, 1e-100);
    
     function [p] = creditEvent(BETA,z,H)
-        NMC = 1;
+        NZ = 1;
         N = size(BETA,1);
         C = size(H,2);
-        z = z'; % for some reason rand(S,1) is giving a 1xS vector
-        denom = (1-sum(BETA.^2,2)).^(1/2); 
-        BZ = BETA*z;
+        denom = (1-sum(BETA.^2,2)).^(1/2);
+        BZ = BETA*z';
         CH = H;
-        CH = [repmat(-Inf,N,1),CH];
-        CHZ = repmat(CH,1,1,NMC);
-        BZ = reshape(BZ,N,1,NMC);
-        CBZ = repelem(BZ,1,C+1);
-        PHI = normcdf((CHZ - CBZ) ./ (denom));
+        CHZ = repmat(CH,1,1,NZ);
+        BZ = reshape(BZ,N,1,NZ);
+        CBZ = repelem(BZ,1,C);
+        PINV = (CHZ - CBZ) ./ denom;
+        PHI = normcdf(PINV);
+        PHI = [zeros(N,1,NZ) PHI];
         p = diff(PHI,1,2); %column wise diff
         clear sampleE;
         clear sampleZ;

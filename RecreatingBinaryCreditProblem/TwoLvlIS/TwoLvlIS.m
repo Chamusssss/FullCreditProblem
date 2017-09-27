@@ -1,11 +1,11 @@
 clear all;
 N = 2500; % Number of creditors
-NZ = 300; % Number of samples from MoG (pi*) 
-nE = 300; % Number of epsilion samples to take PER z sample
+NZ = 400; % Number of samples from MoG (pi*) 
+nE = 400; % Number of epsilion samples to take PER z sample
 NPi = 600; % Number of samples from MCMC of pi
 NRuns = 1; % Number of times to recompute integral before averaging results
 S = 5; % Dimension of Z
-k = 1; % Number of Gaussians in MoG
+k = 2; % Number of Gaussians in MoG
 burninRatio = 0.2;
 
 a = zeros(1,NRuns);
@@ -15,7 +15,7 @@ for r=1:NRuns
     totalT = cputime;
     disp(strcat('RUN NUMBER',num2str(r)))
     %Initialize data
-    [H, BETA, tail, EAD, CN, LGC, CMM, C] = ProblemParams(N, S, true);
+    [H, BETA, tail, EAD, CN, LGC, CMM, C] = ProblemParams(N, S, true );
 
     %Sample from pi
     disp('BEGIN MCMC SAMPLING FROM PI')

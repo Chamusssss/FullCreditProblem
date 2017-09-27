@@ -1,5 +1,5 @@
 function [H, BETA, tail, EAD, CN, LGC, CMM, C] = ProblemParams(N, S, loadFixed)
-tail = 0.30; % cursive l in paper
+tail = 0.20; % cursive l in paper
 C = 4; % number of credit states
 
 if(loadFixed)
@@ -16,7 +16,6 @@ else
     CMM(:,1) = p;
     CMM(:,2) = 1-p;
 
-    % Homogenerous
     EAD = 0.5 + rand(N, 1);           % exposure of the nth obligor
     EAD = EAD / sum(EAD);
     CN = 2 * ones(N, 1);        % initial credit state of the nth obligor

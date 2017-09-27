@@ -52,8 +52,10 @@ function [ mu, thetaOpt ] = GlassermanMuCon(z0,theta0, H, BETA, tail, EAD, LGC )
         gPsi = sum(sum(gp.*exp(weights.*theta),2) ./ sum(pnc.*exp(weights.*theta),2),1);
         gPsi = reshape(gPsi,size(z));
         
+        dpsidtheta = sum(sum(pnc.*weights.*exp(weights.*theta),2) ./ sum(pnc.*exp(weights.*theta),2),1);
+        
         grad = [-gPsi + z; ...
-            tail - sum(sum(pnc.*weights.*exp(weights.*theta),2) ./ sum(pnc.*exp(weights.*theta),2),1)
+            tail - dpsidtheta
             ];
     end
 
@@ -63,7 +65,8 @@ function [ mu, thetaOpt ] = GlassermanMuCon(z0,theta0, H, BETA, tail, EAD, LGC )
         theta = v(end);
         z = v(1:end-1);
         pnc = ComputePNC(H,BETA,z);
-        ceq = -tail + sum(sum(pnc.*weights.*exp(weights.*theta),2) ./ sum(pnc.*exp(weights.*theta),2),1);
+        dpsidtheta = sum(sum(pnc.*weights.*exp(weights.*theta),2) ./ sum(pnc.*exp(weights.*theta),2),1);
+        ceq = -tail + dpsidtheta;
        
         gp = ComputeGradP(H,BETA,z);
         

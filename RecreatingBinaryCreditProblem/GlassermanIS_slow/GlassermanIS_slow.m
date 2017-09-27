@@ -2,7 +2,6 @@ clear all;
 N = 2500; % Number of creditors
 NZ = 1; % Number of samples from MC
 nE = 10000; % Number of epsilion samples to take PER z sample
-NPi = 1200; % Number of samples from MCMC of pi
 NRuns = 1; % Number of times to recompute integral before averaging results
 S = 5; % Dimension of Z
 k = 2; % Number of Gaussians in MoG
@@ -14,7 +13,6 @@ v = zeros(1,NRuns);
   
 az = zeros(1,NZ);
 vz = zeros(1,NZ);
-
 
 try
     for r=1:NRuns

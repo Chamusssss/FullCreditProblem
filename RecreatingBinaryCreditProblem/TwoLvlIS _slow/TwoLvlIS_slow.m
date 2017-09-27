@@ -1,11 +1,11 @@
 clear all;
 N = 2500; % Number of creditors
 NZ = 500; % Number of samples from MC
-nE = 500; % Number of epsilion samples to take PER z sample
-NPi = 1200; % Number of samples from MCMC of pi
-NRuns = 5; % Number of times to recompute integral before averaging results
-S = 20; % Dimension of Z
-k = 2; % Number of Gaussians in MoG
+nE = 10000; % Number of epsilion samples to take PER z sample
+NPi = 600; % Number of samples from MCMC of pi
+NRuns = 1; % Number of times to recompute integral before averaging results
+S = 5; % Dimension of Z
+k = 1; % Number of Gaussians in MoG
 burninRatio = 0.1;
 C = 4;
   
@@ -26,20 +26,24 @@ try
         B = floor(NPi * burninRatio);
         f = @(z) DensityAtZ(z,H,BETA,tail,EAD,LGC);
 
-        sampleZ = slicesample(rand(1,S), NPi, 'pdf', f, 'thin', 3, 'burnin', B);
+        %sampleZ = slicesample(rand(1,S), NPi, 'pdf', f, 'thin', 3, 'burnin', B);
         %disp(strcat('FINISH MCMC SAMPLING FROM PI...',num2str(cputime - t),'s'))
 
         %disp('BEGIN TRAINING MOG')
         t = cputime;
-        [~, model, ~] = Emgm(sampleZ', k);  
-        MoGWeights = model.weight;
-        MoGMu = model.mu;
-        MoGSigma = model.Sigma;
+        %[~, model, ~] = Emgm(sampleZ', k);  
+        MoGWeights = 1;% model.weight;
+        MoGMu =  [-0.6788
+                2.0342
+                0.0677
+                2.2176
+               -1.8130];
+        MoGSigma = eye(S); %model.Sigma;
         %disp(strcat('FINISH TRAINING MOG...',num2str(cputime - t),'s'))
         zIndex = 1;
         l = zeros(NZ,1);
-        for zIndex=1:NZ
-        %while true
+        %for zIndex=1:NZ
+        while true
 %             disp('BEGIN SAMPLING')
 %             t = cputime;
             sampleZ = SampleMoG(MoGWeights,MoGMu,MoGSigma,1)';
@@ -114,10 +118,10 @@ try
             az(zIndex) = mean(vpa(l));
             %vz(zIndex) = vpa(var(l));
             
-%             if (mod(zIndex,10000) == 0)
-%               vpa(mean(az))
-%             end
-            %zIndex = zIndex + 1;
+            if (mod(zIndex,10000) == 0)
+              vpa(mean(az))
+            end
+            zIndex = zIndex + 1;
 %             clear C;
 %             clear CMM;
 %             clear CN;

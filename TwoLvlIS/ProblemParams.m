@@ -1,41 +1,32 @@
-function [H, BETA, tail, EAD, CN, LGC, CMM] = ProblemParams(N, S, loadFixed)
-tail = 0.42; % cursive l in paper
+function [H, BETA, tail, EAD, CN, LGC, CMM, C] = ProblemParams(N, S, loadFixed)
+tail = 0.3; % cursive l in paper
 C = 4; % number of credit states
 
 if(loadFixed)
            filename = strcat(pwd,'\Experiments\S=',num2str(S),'\params.mat');
            load(filename); 
 else
-    % credit states explaination C x C
-    % probability of transition from "row" state to "col" state
-    % 1 - "D" default
-    % 2 - "C" grade
-    % 3 - "B" grade
-    % 4 - "A" grade
-    CMM = [1.0000 0.0000 0.0000 0.0000
-           0.2550 0.6801 0.0649 0.0000
-           0.0270 0.0125 0.9397 0.0208
-           0.0002 0.0000 0.0202 0.9796];
+    p = 0.01*(1 + sin(16*pi*(1:N)/N));
+    
+    % Credit state matrix N x C. Contains probs of each creditor to move to each
+    % credit state for THIS timestep
+    CMM = zeros(N,C);
+    CMM(:,1) = 1/3*p;
+    CMM(:,2) = 1-p;
+    CMM(:,3) = 1/3*p;
+    CMM(:,4) = 1/3*p;
 
-    % CMM = [1.0000 0.0000 0.0000 0.0000
-    %        0.0000 0.0000 0.0000 0.0000
-    %        0.0000 0.0000 0.0000 0.0000
-    %        0.9900 0.0000 0.0000 0.0000];
-
-    % Homogenerous
-    EAD = ones(N, 1);           % exposure of the nth obligor
+    EAD = 0.5 + rand(N, 1);           % exposure of the nth obligor
     EAD = EAD / sum(EAD);
-    CN = 4 * ones(N, 1);        % initial credit state of the nth obligor
+    CN = 2 * ones(N, 1);        % initial credit state of the nth obligor
     BETA = 1/sqrt(S)*(-1 + (2)*rand(N,S));    % sensitivity to each individual risk
     %BETA = repelem(0.01,N,S);
 
     LGC = zeros(N, C);
-    LGC(:, 1) = 0.8;
-    LGC(:, 2) = 0.5;
-    LGC(:, 3) = 0.3;
-    % LGC(:, 1) = 0.2;
-    % LGC(:, 2) = 0.2;
-    % LGC(:, 3) = 0.2;
+    LGC(:,1) = floor(5*(1:N)/N).^2';
+    %LGC(:,2) = LGC(:,1);
+    LGC(:,3) = LGC(:,1);
+    LGC(:,4) = LGC(:,1);
 
     cumCMM = cumsum(CMM, 2);
     %H_indc = zeros(C, C);

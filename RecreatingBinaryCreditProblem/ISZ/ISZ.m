@@ -1,10 +1,10 @@
 clear all;
 N = 2500; % Number of creditors
-NZ = 300; % Number of samples from MoG (pi*) 
-nE = 300; % Number of epsilion samples to take PER z sample
-NPi = 600; % Number of samples from MCMC of pi
-NRuns = 3; % Number of times to recompute integral before averaging results
-S = 5; % Dimension of Z
+NZ = 400; % Number of samples from MoG (pi*) 
+nE = 400; % Number of epsilion samples to take PER z sample
+NPi = 1800; % Number of samples from MCMC of pi
+NRuns = 5; % Number of times to recompute integral before averaging results
+S = 15; % Dimension of Z
 k = 2; % Number of Gaussians in MoG
 burninRatio = 0.1;
 
