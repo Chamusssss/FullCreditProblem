@@ -1,7 +1,7 @@
 clear all;
 N = 2500; % Number of creditors
-NZ = 300; % Number of Z samples 
-nE = 300; % Number of epsilion samples to take PER z sample
+NZ = 200; % Number of Z samples 
+nE = 200; % Number of epsilion samples to take PER z sample
 NRuns = 1; % Number of times to recompute integral before averaging results
 S = 5; % Dimension of Z
 
@@ -74,7 +74,8 @@ for r=1:NRuns
     end
     psi = sum(log(sum(pncz.*exp(B),2)),1);
     LRE = reshape(exp(-repelem(theta,1,1,nE).*Loss + repelem(psi,1,1,nE)),1,nE*NZ,1);
-    LRZ = repelem(arrayfun(@(i) exp(-mu'*sampleZ(:,i) + 0.5*(mu'*mu)),1:NZ),1,nE);
+    %LRZ = repelem(arrayfun(@(i) exp(-mu'*sampleZ(:,i) + 0.5*(mu'*mu)),1:NZ),1,nE);
+    LRZ = repelem(arrayfun(@(i) mvnpdf(sampleZ(:,i))/mvnpdf(sampleZ(:,i),mu,eye(S)),1:NZ),1,nE);
     LR = LRE.*LRZ;
     Loss = reshape(Loss,1,nE*NZ);
     l = double(Loss > tail).*LR;

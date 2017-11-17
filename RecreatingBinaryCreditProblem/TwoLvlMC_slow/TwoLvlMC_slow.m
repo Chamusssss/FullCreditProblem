@@ -1,8 +1,8 @@
 clear all;
 N = 2500; % Number of creditors
-NZ = 300; % Number of samples from MC
-nE = 300; % Number of epsilion samples to take PER z sample
-S = 10; % Dimension of Z
+NZ = 1; % Number of samples from MC
+nE = 10000; % Number of epsilion samples to take PER z sample
+S = 1; % Dimension of Z
 NRuns = 1; % Number of times to recompute integral before averaging results
   
 a = zeros(1,NRuns);
@@ -17,8 +17,8 @@ for r=1:NRuns
     totalT = cputime;
     disp(strcat('RUN NUMBER',num2str(r)))
     zIndex = 1;
-    for zIndex=1:NZ
-    %while true
+    %for zIndex=1:NZ
+    while true
         %disp(num2str(zIndex))
 
         %disp('BEGIN SAMPLING')
@@ -78,7 +78,7 @@ for r=1:NRuns
         if (mod(zIndex,10000) == 0)
            mean(vpa(az))
         end
-        %zIndex = zIndex + 1;
+        zIndex = zIndex + 1;
 
         %disp(strcat('FINISH COMPUTING LOSS...',num2str(cputime - t),'s'))
         %clear C;

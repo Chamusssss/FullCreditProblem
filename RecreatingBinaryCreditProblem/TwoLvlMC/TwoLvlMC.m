@@ -1,9 +1,9 @@
 clear all;
 N = 2500; % Number of creditors
-NZ = 300; % Number of samples from MC
-nE = 300; % Number of epsilion samples to take PER z sample
-S = 5; % Dimension of Z
-NRuns = 3; % Number of times to recompute integral before averaging results
+NZ = 200; % Number of samples from MC
+nE = 200; % Number of epsilion samples to take PER z sample
+S = 1; % Dimension of Z
+NRuns = 1; % Number of times to recompute integral before averaging results
   
 a = zeros(1,NRuns);
 v = zeros(1,NRuns);

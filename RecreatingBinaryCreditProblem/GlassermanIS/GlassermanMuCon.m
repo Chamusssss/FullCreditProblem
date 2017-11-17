@@ -1,4 +1,4 @@
-function [ mu, thetaOpt ] = GlassermanMuCon(z0,theta0, H, BETA, tail, EAD, LGC )
+function [ mu, thetaOpt ] = GlassermanMuCon(z0, theta0, H, BETA, tail, EAD, LGC )
 
     weights = EAD.*LGC;
     v0 = [z0;theta0];
