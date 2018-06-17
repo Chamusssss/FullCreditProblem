@@ -1,6 +1,6 @@
 function [H, BETA, tail, EAD, CN, LGC, CMM, C] = ProblemParams(N, S, loadFixed)
 tail = 0.3; % cursive l in paper
-C = 4; % number of credit states
+C = 5; % number of credit states
 
 if(loadFixed)
            filename = strcat(pwd,'\Experiments\S=',num2str(S),'\params.mat');
