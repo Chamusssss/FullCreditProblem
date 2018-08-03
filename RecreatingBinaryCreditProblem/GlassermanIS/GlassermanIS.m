@@ -1,8 +1,8 @@
 clear all;
-N = 2500; % Number of creditors
+N = 2500; % Number of creditor
 NZ = 200; % Number of Z samples 
 nE = 200; % Number of epsilion samples to take PER z sample
-NRuns = 1; % Number of times to recompute integral before averaging results
+NRuns = 5; % Number of times to recompute integral before averaging results
 S = 5; % Dimension of Z
 
 a = zeros(1,NRuns);
@@ -10,7 +10,10 @@ v = zeros(1,NRuns);
 
 for r=1:NRuns 
     totalT = cputime;
+    %cputime returns the total CPU time (in seconds) used by your MATLAB® 
+    %application from the time it was started
     disp(strcat('RUN NUMBER',num2str(r)))
+    
     %Initialize data
     [H, BETA, tail, EAD, CN, LGC, CMM, C] = ProblemParams(N, S, true);
     

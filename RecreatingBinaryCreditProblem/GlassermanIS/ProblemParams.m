@@ -1,9 +1,11 @@
 function [H, BETA, tail, EAD, CN, LGC, CMM, C] = ProblemParams(N, S, loadFixed)
+% N: Number of creditor
+
 tail = 0.20; % cursive l in paper
 C = 4; % number of credit states
 
 if(loadFixed)
-           filename = strcat(pwd,'\Experiments\S=',num2str(S),'\params.mat');
+           filename = strcat(pwd,'/Experiments/S=',num2str(S),'/params.mat');
            load(filename); 
 else
     % We will be putting all creditors in credit state C with prob p of
@@ -17,10 +19,12 @@ else
     CMM(:,2) = 1-p;
 
     % Homogenerous
-    EAD = 0.5 + rand(N, 1);           % exposure of the nth obligor
-    EAD = EAD / sum(EAD);
+    EAD = 0.5 + rand(N, 1);           % exposure of the nth obligor, vector
+    EAD = EAD / sum(EAD);             %still vector
     CN = 2 * ones(N, 1);        % initial credit state of the nth obligor
+    %all are state 2?
     BETA = 1/sqrt(S)*(-1 + (2)*rand(N,S));    % sensitivity to each individual risk
+    % N*S matrix
     %BETA = repelem(0.01,N,S);
 
     LGC = zeros(N, C);

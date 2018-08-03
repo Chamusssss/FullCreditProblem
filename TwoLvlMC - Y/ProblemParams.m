@@ -3,7 +3,7 @@ tail = 0.41; % cursive l in paper
 C = 4; % number of credit states
 
 if(loadFixed)
-           filename = strcat(pwd,'\Experiments\S=',num2str(S),'\params.mat');
+           filename = strcat(pwd,'/Experiments/S=',num2str(S),'/params.mat');
            load(filename); 
 else
     % credit states explaination C x C
